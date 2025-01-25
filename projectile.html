@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Motion</title>
+</head>
+<body>
+    <div class="main">
+        <div class="input-area">
+            <div class="whole-input">
+                <div class="input-container">
+                    <label id="label1" for="input1">Enter Velocity</label>
+                    <input type="number" id="init-velocity" class="input-box" />
+                </div>
+                
+                <div class="input-container">
+                    <label id="label2" for="input2">Enter Angle</label>
+                    <input type="number" id="angle" class="input-box" />
+                </div>
+                
+                <div class="input-container">
+                    <label id="label3" for="input3">Enter Gravity</label>
+                    <input type="text" id="gravity" class="input-box" />
+                </div>
+                <button id="button">GO!</button>
+            </div>
+        </div>
+        
+        <canvas id="canvas" width="1100" height="584" style="border: 5px solid green; margin-left: 2%; margin-top: 2px;"></canvas>
+        <h1 id="motion-name">Projectile Motion</h1>
+    </div>
+    <div class="control-panel">
+        <div>
+            <label for="vel">Velocity</label>
+            <span id="velValue">Not set</span>
+        </div>
+        <div>
+            <label for="time">Elapsed Time</label>
+            <span id="timeValue">Not set</span>
+        </div>
+        <div>
+            <label for="max_height">Max Height</label>
+            <span id="heightValue">Not set</span>
+        </div>
+        <div>
+            <label for="max_dist">Max Distance</label>
+            <span id="distValue">Not set</span>
+        </div>
+    </div>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    h1 {
+        margin-top: -600px;
+        margin-left: 410px;
+        color: black;
+        text-decoration: underline;
+        text-underline-offset: 8px;
+    }
+    #button {
+        width: 5rem;
+        height: 2rem;
+        outline: none;
+        border: 2px solid black;
+        background-color: aqua;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    #canvas {
+        background: #fff;
+        border-radius: 3px solid black;
+    }
+
+    .main {
+        background-image: url('images/bg.avif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+    }
+
+    .container svg {
+        cursor: pointer;
+        font-size: 5px;
+    }
+
+    .control-panel {
+        position: absolute;
+        right: 1px;
+        top: 20px;
+        width: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        z-index: 10;
+    }
+
+    .control-panel div {
+        margin-bottom: 10px;
+    }
+
+    .control-panel label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .control-panel span {
+        display: block;
+        margin-bottom: 5px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #e9e9e9;
+    }
+
+    .control-panel button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .input-container {
+        position: relative;
+        margin-right: 20px;
+        display: inline-block;
+    }
+
+    .input-container:nth-child(1) {
+        margin-left: 25%;
+    }
+    
+    .input-area label {
+        position: absolute;
+        left: 10px;
+        top: 55%;
+        transform: translateY(-50%);
+        transition: all 0.3s ease;
+        font-size: 18px;
+        color: black;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    input:focus {
+        border: 2px solid #1cd679;
+    }
+    
+    input:focus + label,
+    input:not(:placeholder-shown) + label {
+        top: -10px;
+        font-size: 12px;
+        color: #000;
+        background-color: white;
+    }
+    
+    .input-box {
+        width: 150px;
+        height: 2rem;
+        margin-top: 4px;
+        padding: 8px;
+        padding-top: 12px;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        border: 2px solid white;
+        font-size: 18px;
+        box-sizing: border-box;
+    }
+    
+</style>
+<script src="/f3.js"></script>
+<script>
+
+    const button = document.getElementById("button");
+    const main = document.querySelector(".main");
+    const canvas = document.getElementById("canvas");
+    const gravity = document.getElementById("gravity");
+    const heightDisplay = document.getElementById("heightValue");
+    const distDisplay = document.getElementById("distValue");
+    const timeDisplay = document.getElementById("timeValue");
+    const velDisplay = document.getElementById("velValue");
+    const motion_name = document.getElementById("motion-name");
+    const vel = document.querySelector(".vel");
+    const wholeInput = document.querySelectorAll(".whole-input");
+    const ctx = canvas.getContext("2d");
+    
+    const inputs = document.querySelectorAll('.input-box');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', (event) => {
+            const label = event.target.previousElementSibling;
+            if (event.target.value !== '') {
+                label.style.top = '7px';
+                label.style.fontSize = '12px';
+                label.style.color = '#000';
+            } else {
+                label.style.top = '50%';
+                label.style.fontSize = '16px';
+                label.style.color = '#999';
+            }
+        });
+    });
+
+
+    let gravity_values = {
+        sun: 274,
+        mercury: 3.70,
+        venus: 8.87,
+        earth: 9.81,
+        moon: 1.62,
+        mars: 3.71,
+        jupiter: 24.79,
+        saturn: 10.44,
+        uranus: 8.87,
+        neptune: 11.15,
+    };
+
+    let planetImages = {
+        sun: 'planet_in/sun_in.jpg',
+        mercury: 'planet_in/mercury_in.jpg',
+        venus: 'planet_in/venus_in.webp',
+        earth: 'planet_in/earth_in.jpg',
+        moon: 'planet_in/moon_in.png',
+        mars: 'planet_in/mars_in.jfif',
+        jupiter: 'planet_in/jupiter_in.webp',
+        saturn: 'planet_in/saturn_in.jfif',
+        uranus: 'planet_in/uranus_in.png',
+        neptune: 'planet_in/neptune_in.jpg',
+        default: 'images/bg.avif'
+    };
+
+    let currentBackgroundImage = new Image();
+    currentBackgroundImage.src = 'images/bg.avif';
+
+    function loadBackgroundImage(imageSrc) {
+        currentBackgroundImage.src = imageSrc;
+    }
+
+    function draw(Vo, angle) {
+        const Vx = Vo * Math.cos(angle);
+        const Vy = Vo * Math.sin(angle);
+        g = gravity_values[gravity.value];
+
+        const start_time = Date.now();
+
+        function update() {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.drawImage(currentBackgroundImage, 0, 0, canvas.width, canvas.height);
+
+            ctx.setTransform(1, 0, 0, -1, 0, canvas.height);
+            ctx.fillStyle = "red";
+
+            const t = (Date.now() - start_time) / 200;
+            let x = Vx * t;
+            let y = Vy * t - (0.5 * g * Math.pow(t, 2));
+            ctx.beginPath();
+            ctx.arc(x, y, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (y < 0) 
+                return;
+            setTimeout(update, t);
+        }
+
+        update();
+    }
+
+    function degreeToRadian(degree) {
+        return degree * (Math.PI / 180);
+    }
+
+    function calculateMaxHeight(velocity, angle, gravity) {
+        const Vy = velocity * Math.sin(degreeToRadian(angle));
+        return (Math.pow(Vy, 2)) / (2 * gravity);
+    }
+
+    function calculateMaxDistance(velocity, angle, gravity) {
+        const Vx = velocity * Math.cos(degreeToRadian(angle));
+        const Vy = velocity * Math.sin(degreeToRadian(angle));
+        return (Vx * Vy) / gravity * 2;
+    }
+
+    function calculateTimeOfFlight(velocity, angle, gravity) {
+        const Vy = velocity * Math.sin(degreeToRadian(angle));
+        return (2 * Vy) / gravity;
+    }
+
+    function start() {
+        const velocity = parseFloat(document.getElementById("init-velocity").value);
+        const angle = parseFloat(document.getElementById("angle").value);
+        g = gravity_values[gravity.value];
+
+        draw(velocity, degreeToRadian(angle));
+
+        const maxHeight = calculateMaxHeight(velocity, angle, g);
+        const maxDistance = calculateMaxDistance(velocity, angle, g);
+        const timeOfFlight = calculateTimeOfFlight(velocity, angle, g);
+
+        heightDisplay.innerHTML = `${maxHeight.toFixed(2)} meters`;
+        distDisplay.innerHTML = `${maxDistance.toFixed(2)} meters`;
+        velDisplay.innerHTML = `${velocity.toFixed(2)} m/s`
+        timeDisplay.innerHTML = `${timeOfFlight.toFixed(2)} seconds`
+        motion_name.innerHTML = `Projectile Motion: ${gravity.value}`
+    };
+
+    function tab() {
+        wholeInput.forEach((input, index) => {
+            input.addEventListener("keydown", (event) => {
+                if (event.key === "Tab") {
+                    event.preventDefault();
+
+                    const nextInput = wholeInput[index + 1] || wholeInput[0];
+                    nextInput.focus();
+                }
+            });
+        });
+    };
+    
+    gravity.addEventListener("keydown", (event) => {
+        tab();
+        if (event.key === "Enter") {
+            event.preventDefault();
+            start();
+            if (gravity.value in planetImages) {
+                loadBackgroundImage(planetImages[gravity.value]);
+            } else {
+                loadBackgroundImage(planetImages['default']);
+            }
+        } if (event.key === "Delete") {
+            back(event);
+        };
+    });
+
+    button.addEventListener("click", () => {
+        start();
+        if (gravity.value in planetImages) {
+            loadBackgroundImage(planetImages[gravity.value]);
+        } else {
+            loadBackgroundImage(planetImages['default']);
+        }
+    });
+
+</script>
+</html>

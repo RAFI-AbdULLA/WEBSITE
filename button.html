@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Simulation</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome To SIMULATION</h1>
+        <div class="bubbles">
+            <span style="--i:11"></span>
+            <span style="--i:12"></span>
+            <span style="--i:24"></span>
+            <span style="--i:10"></span>
+            <span style="--i:14"></span>
+            <span style="--i:23"></span>
+            <span style="--i:18"></span>
+            <span style="--i:16"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:22"></span>
+            <span style="--i:25"></span>
+            <span style="--i:18"></span>
+            <span style="--i:21"></span>
+            <span style="--i:15"></span>
+            <span style="--i:13"></span>
+            <span style="--i:26"></span>
+            <span style="--i:17"></span>
+            <span style="--i:13"></span>
+            <span style="--i:28"></span>
+            <span style="--i:11"></span>
+            <span style="--i:12"></span>
+            <span style="--i:24"></span>
+            <span style="--i:10"></span>
+            <span style="--i:14"></span>
+            <span style="--i:23"></span>
+            <span style="--i:18"></span>
+            <span style="--i:16"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:22"></span>
+            <span style="--i:25"></span>
+            <span style="--i:18"></span>
+            <span style="--i:21"></span>
+            <span style="--i:15"></span>
+            <span style="--i:13"></span>
+            <span style="--i:26"></span>
+            <span style="--i:17"></span>
+            <span style="--i:13"></span>
+            <span style="--i:28"></span>
+        </div>
+        <div class="button">
+            <a href="/carbon.html" data-description="In this Simulation You Can Visualize a Carbon Atom Really Deeply">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Carbon Atom
+            </a>
+            <a href="/oxygen.html" data-description="In this Simulation You Can Visualize an Oxygen Atom Really Deeply">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Oxygen Atom
+            </a>
+            <a href="/hydrogen.html" data-description="In this Simulation You Can Visualize a Hydrogen Atom Really Deeply">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Hydrogen Atom
+            </a>
+            <a href="/nytrogen.html" data-description="In this Simulation You Can Visualize a Nitrozen Atom Really Deeply">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Nitrogen Atom
+            </a>
+            <a href="/solar system.html" data-description="In this Simulation You Can Visualize Our Solar System Really Deeply">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                3D Solar System
+            </a>
+            <a href="/object.html" data-description="In this Simulation You Can Visualize How an Object will fall in Different Gravity">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Object Falling
+            </a>
+            <a href="/projectile.html" data-description="In this Simulation You Can Visualize How a Projectile will Behave in Different Gravity">
+                <span></span>
+                <span></span>
+                <span></span> 
+                <span></span>
+                Projectile Motion
+            </a>
+            <a href="/slignshot/slignshot.html" data-description="In this Simulation You Can Do Experiments with Slignshots">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Slignshot Simulation
+            </a>
+            <a href="/chemistry.html" data-description="In this Simulation You will Learn Details about each Element of the Periodic Table">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Chemistry Simulation
+            </a>
+            <a href="/test.html" data-description="This simulation lets you explore how objects collide based on physics principles like momentum, energy conservation, and elasticity. Experiment with different masses and velocities to see how motion is affected.">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Collision
+            </a>
+        </div>
+        <div class="pop-up"></div>
+        <div class="overlay"></div>
+    </div>
+    <a type="button" href="/main.html" class="btn" style="text-decoration: none"> Go Back</a>
+</body>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+       min-height: 100vh; 
+       background-color: #0c192c;
+    }
+    .btn {
+        display: flex;
+        background-color: #4CAF50;
+        justify-content: center;
+        align-items: center;
+        color: black;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 150px;
+        margin-left: 600px;
+        margin-top: -90px;
+        opacity: 0.8;
+    }
+    .container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .bubbles{
+        position: relative;
+        display: flex;
+    }
+    .bubbles span{
+        position: relative;
+        width: 30px;
+        height: 30px;
+        background: #4fc3dc;
+        margin: 0 4px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 10px #4fc3dc44,
+        0 0 50px #4fc3dc,
+        0 0 100px #4fc3dc;
+        animation: Animate 15s linear infinite;
+        animation-duration: calc(55s / var(--i));
+    }
+    .bubbles span:nth-child(even){
+        background: #ff2d75;
+        box-shadow: 0 0 0 10px #ff2d7544,
+        0 0 50px #ff2d75,
+        0 0 100px #ff2d75;
+    }
+    @keyframes Animate{
+        0%{
+            transform: translateY(100vh) scale(0);
+        }
+        100%{
+            transform: translateY(-10vh), scale(1);
+        }
+    }
+    .container h1{
+        color: white;
+        text-align: center;
+        text-decoration: underline;
+    }
+    .button a{
+        position: relative;
+        display: inline-block;
+        color: #03e9f4;
+        font-size: 20px;
+        padding: 15px;
+        margin: 20px -90px;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        transition: 0.5s;
+        letter-spacing: 4px;
+        margin-right: 150px;
+    }
+    a:nth-child(1){
+        filter: hue-rotate(290deg);
+        margin-top: 50px;
+        margin-left: 50px;
+    }
+    a:nth-child(4){
+        margin-left: -80px;
+        filter: hue-rotate(110deg);
+    }
+    a:nth-child(5) {
+        margin-left: 10px;
+        margin-top: 50px;
+        filter: hue-rotate(210deg);
+    }
+    a:nth-child(3) {
+        filter: hue-rotate(210deg);
+    }
+    a:nth-child(7) {
+        filter: hue-rotate(110deg);
+        margin-left: -100px;
+    }
+    a:nth-child(8) {
+        filter: hue-rotate(290deg);
+        margin-right: -200px;
+    }
+    a:nth-child(9) {
+        margin-left: 470px;
+        filter: hue-rotate(-290deg);
+    }
+    .button a:hover {
+        background: #03e9f4;
+        color: #050801;
+        box-shadow: 0 0 50px;
+        border-radius: 10px;
+    }
+    .button a span {
+        position: absolute;
+        display: block;
+    }
+    .pop-up {
+        position: absolute;
+        top: calc(100% + 10px);
+        width: 500px;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 2;
+        padding: 10px; /* Padding inside the pop-up */
+        border-radius: 5px; /* Rounded corners */
+    }
+    .button a:nth-child(1):hover + .pop-up,
+    .button a:nth-child(5):hover + .pop-up {
+        left: calc(50% - 100px); /* Adjust positioning */
+    }
+    .button a:not(:nth-child(1)):not(:nth-child(5)):hover + .pop-up {
+        left: 50%; /* Center by default */
+        transform: translateX(-50%);
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
+    .dimmed .overlay {
+        opacity: 1;
+    }
+    a span:nth-child(1){
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(transparent, #03e9f4);
+        animation: animate1 1s linear infinite;
+    }
+    @keyframes animate1{
+        0%{
+            left: -100%;
+        }
+        50%, 100%{
+            left: 100%;
+        }
+    }
+    a span:nth-child(2){
+        top: -100%;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, #03e9f4);
+        animation: animate2 1s linear infinite;
+        animation-delay: 0.25s;
+    }
+    @keyframes animate2{
+        0%{
+            top: -100%;
+        }
+        50%, 100%{
+            top: 100%;
+        }
+    }
+    a span:nth-child(3){
+        bottom: 0;
+        right: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(270deg, transparent, #03e9f4);
+        animation: animate3 1s linear infinite;
+        animation-delay: 0.5s;
+    }
+    @keyframes animate3{
+        0%{
+            right: -100%;
+        }
+        50%, 100%{
+            right: 100%;
+        }
+    }
+    a span:nth-child(4){
+        bottom: -100%;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(360deg, transparent, #03e9f4);
+        animation: animate4 1s linear infinite;
+        animation-delay: 0.75s;
+    }
+    @keyframes animate4{
+        0%{
+            bottom: -100%;
+        }
+        50%, 100%{
+            bottom: 100%;
+        }
+    }
+</style>
+<script src="/f3.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.button a');
+        const popUp = document.querySelector('.pop-up');
+        const overlay = document.querySelector('.overlay');
+        const container = document.querySelector('.container');
+
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                const description = button.getAttribute('data-description');
+                popUp.textContent = description;
+                popUp.style.opacity = '1';
+                
+                // Add dimmed class to container
+                container.classList.add('dimmed');
+
+                // Position the pop-up under the hovered button
+                const buttonRect = button.getBoundingClientRect();
+                const containerRect = button.closest('.container').getBoundingClientRect();
+                
+                // Determine if the button is at the very left
+                const isAtLeft = buttonRect.left - containerRect.left <= 0;
+                
+                // Set the position of the pop-up box
+                if (button.matches(':nth-child(1)') || button.matches(':nth-child(5)')) {
+                    popUp.style.left = `calc(50% - 550px)`; // Adjust as needed
+                } else if (button.matches(':nth-child(2)') || button.matches(':nth-child(3)') || button.matches(':nth-child(6)') || button.matches(':nth-child(7)') || button.matches(':nth-child(9)')) {
+                    popUp.style.left = `${buttonRect.right - popUp.offsetWidth - (-100)}px`;
+                } else {
+                    popUp.style.left = `${buttonRect.right - popUp.offsetWidth}px`;
+                }
+                
+                popUp.style.top = `${buttonRect.bottom + 10}px`;
+                button.style.zIndex = '3'; // Ensure hovered button is above overlay
+            });
+
+            button.addEventListener('mouseleave', () => {
+                popUp.style.opacity = '0';
+                container.classList.remove('dimmed');
+                button.style.zIndex = '2'; // Reset z-index after hover
+            });
+        });
+    });
+</script>
+</html>

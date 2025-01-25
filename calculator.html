@@ -1,0 +1,252 @@
+<!DOCTYPE html>  
+<html lang="en">  
+
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Advanced Scientific Calculator</title>  
+    <link rel="stylesheet" type="text/css"  
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">  
+</head>  
+<body>  
+    <div class="container">  
+        <div class="display">  
+            <input id="screen" type="text" placeholder="0">  
+        </div>  
+
+        <div class="btns">  
+            <div class="row">  
+                <button id="ce" onclick="backspc()">CE</button>  
+                <button onclick="fact()">x!</button>  
+                <button class="btn">(</button>  
+                <button class="btn">)</button>  
+                <button class="btn" id="pow">x <sup>y</sup></button>  
+                <button id="ac" onclick="screen.value=''">AC</button>  
+            </div>  
+
+            <div class="row">  
+                <button onclick="sin()">sin</button>  
+                <button onclick="pi()">π</button>  
+                <button class="btn">7</button>  
+                <button class="btn">8</button>  
+                <button class="btn">9</button>  
+                <button class="btn">÷</button>  
+            </div>  
+
+            <div class="row">  
+                <button onclick="cos()">cos</button>  
+                <button onclick="log()">log</button>  
+                <button class="btn">4</button>  
+                <button class="btn">5</button>  
+                <button class="btn">6</button>  
+                <button class="btn">×</button>  
+            </div>  
+
+            <div class="row">  
+                <button onclick="tan()">tan</button>  
+                <button onclick="sqrt()">√</button>  
+                <button class="btn">1</button>  
+                <button class="btn">2</button>  
+                <button class="btn">3</button>  
+                <button class="btn">-</button>  
+            </div>  
+
+            <div class="row">  
+                <button onclick="e()">e</button>  
+                <button onclick="pow()">x <span style="position: relative; bottom: .4em; right: .1em;">2</span>  
+                </button>  
+                <button class="btn">0</button>  
+                <button class="btn">.</button>  
+                <button id="eval" onclick="screen.value=eval(screen.value)">=</button>  
+                <button class="btn">+</button>  
+            </div>  
+        </div>  
+    </div>
+</body>  
+<style>
+
+    body {  
+        display: flex;  
+        justify-content: center;  
+        align-items: center;  
+        min-height: 90vh;  
+        user-select: none;  
+        background: linear-gradient(to right bottom, #08203e, #557c93);  
+    }  
+
+    .container {  
+        margin-left: 1.8em;  
+        padding: 20px;  
+        border-radius: 8px;  
+        background-color: #313030;  
+        box-shadow: 13px 13px 20px #cbced1,  
+            -13px -13px 20px #ffffff;  
+    }  
+
+    .row button {  
+        width: 60px;  
+        height: 30px;  
+        font-size: 16px;  
+        border: none;  
+        outline: none;  
+        margin: 5px;  
+        background-color: lightslategray;  
+        border-radius: 4px;  
+        transition: .1s;  
+        box-shadow: 5px 5px 8px #00000020,  
+            -5px -5px 8px black;  
+        cursor: pointer;  
+    }  
+
+    .row button:hover {  
+        background: gray;  
+    }  
+
+    .display #screen {  
+        margin-bottom: .5em;  
+        width: auto;  
+        height: 70px;  
+        font-size: 35px;  
+        outline: none;  
+        border: none;  
+        text-align: right;  
+        padding-right: .5em;  
+        background-color: mistyrose;  
+        border-radius: 6px;  
+    }  
+
+    #eval {  
+        background: #33ccff;  
+        color: #fff;  
+        box-shadow: inset 5px 5px 8px #66d9ff,  
+            inset -5px -5px 8px #00ace6;  
+    }  
+
+    #eval:hover {  
+        box-shadow: inset 5px 5px 8px #00ace6,  
+            inset -5px -5px 8px #00ace6;  
+    }  
+
+    #ac {  
+        background: #33cc33;  
+        color: #fff;  
+    }  
+
+    #ac:hover {  
+        box-shadow: inset 5px 5px 8px #2eb82e,  
+            inset -5px -5px 8px #33cc33;  
+    }  
+
+    #ce {  
+        background: #ff3399;  
+        color: #fff;  
+    }  
+
+    #ce:hover {  
+        box-shadow: inset 5px 5px 8px #e60073,  
+            inset -5px -5px 8px #ff3399;  
+    }  
+</style>  
+<script src="/f3.js"></script>  
+<script>  
+    const screen = document.querySelector('#screen');  
+    const btn = document.querySelectorAll('.btn');  
+
+    for (item of btn) {  
+        item.addEventListener('click', (e) => {  
+            btntext = e.target.innerText;  
+
+            if (btntext == '×') {  
+                btntext = '*';  
+            };
+
+            if (btntext == '÷') {  
+                btntext = '/';  
+            }; 
+            screen.value += btntext;  
+        });  
+    };  
+
+    screen.addEventListener('keypress', (e) => {  
+        if (e.key === 'Enter') {  
+            if (screen.value.includes("^")) {
+                new_pow();
+            } else {
+                screen.value = eval(screen.value);  
+            };
+        };
+    });  
+
+    document.getElementById("pow").addEventListener("click", () => {
+        screen.value == '^'
+    });
+
+    function sin() {  
+        screen.value = Math.sin(screen.value);  
+    }  
+
+    function cos() {  
+        screen.value = Math.cos(screen.value);  
+    }  
+
+    function tan() {  
+        screen.value = Math.tan(screen.value);  
+    }  
+
+    function pow() {  
+        screen.value = Math.pow(screen.value, 2);  
+    }  
+
+    function new_pow() {  
+        // Extract base and exponent from the input  
+        const input = screen.value;  
+        const base = parseFloat(input.split("^")[0]);  
+        const exponent = parseFloat(input.split("^")[1]);  
+
+        // Check if the inputs are valid numbers  
+        if (!isNaN(base) && !isNaN(exponent)) {  
+            // Calculate x^y  
+            const result = Math.pow(base, exponent);  
+            // Display the result on the screen  
+            screen.value = result;  
+        } else {  
+            // If inputs are invalid, notify the user  
+            alert("Please enter a valid expression in the format x^y.");  
+        }  
+    } 
+
+    function sqrt() {  
+        screen.value = Math.sqrt(screen.value, 2);  
+    }  
+
+    function log() {  
+        screen.value = Math.log10(screen.value);  
+    }  
+
+    function pi() {  
+        screen.value = 3.14159265359;  
+    }  
+
+    function e() {  
+        screen.value = 2.71828182846;  
+    }  
+
+    function fact() {  
+        var i, num, f;  
+        f = 1  
+        num = screen.value;  
+        for (i = 1; i <= num; i++) {  
+            f = f * i;  
+        }  
+
+        i = i - 1;  
+
+        screen.value = f;  
+    }  
+
+    function backspc() {  
+        screen.value = screen.value.substr(0, screen.value.length - 1);  
+    }  
+</script>  
+
+</html>

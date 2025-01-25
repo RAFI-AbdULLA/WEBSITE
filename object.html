@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Falling Simulation</title>
+</head>
+<body>
+    <div class="main">
+        <canvas id="canvas"></canvas>
+        <div id="popup" class="popup">
+            <p></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+        <div class="container">
+            <input type="text" class="input" placeholder="">
+            <label class="label">Enter Gravity (e.g. Earth), Height (in meters) and hit Enter</label>
+        </div>
+        <div class="control-panel">
+            <div>
+                <label for="gravity">Gravity</label>
+                <span id="gravityValue">Not set</span>
+            </div>
+            <div>
+                <label for="height">Height</label>
+                <span id="heightValue">Not set</span>
+            </div>
+            <div>
+                <label for="predictedTime">Predicted Time</label>
+                <span id="predictedTimeValue">-</span>
+            </div>
+            <div>
+                <label for="actualTime">Actual Time</label>
+                <span id="actualTimeValue">-</span>
+            </div>
+            <button id="startBtn">Start Simulation</button>
+        </div>
+    </div>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .input {
+        width: 40%;
+        height: 3rem;
+        background: lightgray;
+        text-align: center;
+        border-radius: 30px;
+        margin-left: 30%;
+        border: 3px solid black;
+        outline: none;
+        margin-top: 5px;
+        font-size: 18px;
+        padding-left: 10px;
+    }
+
+    .input::placeholder {
+        color: black;
+    }
+
+    .label {
+        position: absolute;
+        top: 4.25%;
+        left: 460px;
+        transform: translateY(-50%);
+        font-size: 19px;
+        pointer-events: none;
+        transition: 0.3s ease;
+    }
+
+    input:focus {
+        border: 2px solid #1cd679;
+    }
+
+    input:focus ~ .label {
+        top: 7px;
+        font-size: 16px;
+    }
+
+    .control-panel {
+        position: absolute;
+        right: 1px;
+        top: 20px;
+        width: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        z-index: 10;
+    }
+
+    .control-panel div {
+        margin-bottom: 10px;
+    }
+
+    .control-panel label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .control-panel span {
+        display: block;
+        margin-bottom: 5px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #e9e9e9;
+    }
+
+    .control-panel button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    body {
+        margin: 0;
+        overflow: auto;
+    }
+
+    #canvas {
+        background-color: #ff8;
+        position: absolute;
+        top: 100px;
+        left: 50px;
+        z-index: 5;
+    }
+
+    .main {
+        background-image: url("/images/bg.avif");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        z-index: 1;
+    }
+
+    #popup {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        display: none;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        z-index: 100;
+    }
+
+    #popup.show {
+        display: block;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    #popup p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    #popup button {
+        position: relative;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 40px;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    #popup button:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    #popup button:active {
+        transform: scale(0.95);
+    }
+</style>
+<script src="/f3.js"></script>
+<script>
+    let canvas = document.getElementById("canvas");
+    const main = document.querySelector(".main");
+    const input = document.querySelector(".input");
+    const gravityDisplay = document.getElementById("gravityValue");
+    const heightDisplay = document.getElementById("heightValue");
+    const predictedTimeDisplay = document.getElementById("predictedTimeValue");
+    const actualTimeDisplay = document.getElementById("actualTimeValue");
+    const startBtn = document.getElementById("startBtn");
+    const popup = document.getElementById('popup');
+    const popupMsg = popup.querySelector("p");
+
+    const simulation_radius = 50;
+    let var_radius = simulation_radius;
+
+    let context = canvas.getContext("2d");
+
+    let canvasWidth = window.innerWidth * 0.8;
+    let canvasHeight = window.innerHeight * 0.8;
+
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    const fixed_radius = 50;
+
+    function closePopup(e) {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'none';
+        popup.classList.remove("show");
+    }
+
+    let timestep_values = {
+        sun: 0.0001521, // 5000m
+        mercury: 0.000151, // 50m
+        venus: 0.000152, // 100m
+        earth: 0.0001511, // 100m
+        // if you wanna to increase the falling duration
+        // you need to decrease the timestep value;
+        moon: 0.000152, // 30m
+        mars: 0.000152, // 50m
+        jupiter: 0.000152, // 500m
+        saturn: 0.000153, // 300m
+        uranus: 0.0019, //100m
+        neptune: 0.0001525, //300m
+    };
+
+    // from  to neptune except earth
+    // timestep should be re designed
+
+    let gravity_values = {
+        sun: 274,
+        mercury: 3.70,
+        venus: 8.87,
+        earth: 9.81,
+        moon: 1.62,
+        mars: 3.71,
+        jupiter: 24.79,
+        saturn: 10.44,
+        uranus: 8.87,
+        neptune: 11.15,
+    };
+
+    let y = 0;
+    let vy = 0;
+    let gravity = 0;
+    let animationId;
+
+    let heightScale = 1;
+    const maxCanvasHeight = 10000;
+
+    let heightSet = false;
+    let gravitySet = false;
+
+    let startTime;
+
+    let timestepValue = 0;
+
+    let planetImages = {
+        sun: 'planet_in/sun_in.jpg',
+        mercury: 'planet_in/mercury_in.jpg',
+        venus: 'planet_in/venus_in.webp',
+        earth: 'planet_in/earth_in.jpg',
+        moon: 'planet_in/moon_in.png',
+        mars: 'planet_in/mars_in.jfif',
+        jupiter: 'planet_in/jupiter_in.webp',
+        saturn: 'planet_in/saturn_in.jfif',
+        uranus: 'planet_in/uranus_in.png',
+        neptune: 'planet_in/neptune_in.jpg',
+        default: 'images/bg.avif'
+    };
+
+    let currentBackgroundImage = 'images/bg.avif';
+
+    function loadBackgroundImage(imageSrc) {
+        currentBackgroundImage = imageSrc;
+        let img = new Image();
+        img.src = imageSrc;
+        img.onload = function () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+    };
+
+    const maxHeight = {
+        sun: 1000000,
+        mercury: 5000,
+        venus: 7000,
+        earth: 3500,
+        moon: 300,
+        mars: 4000,
+        jupiter: 80000,
+        saturn: 60000,
+        uranus: 25000,
+        neptune: 30000
+    };
+
+    function validateHeightForPlanet(newHeight) {
+        const planetName = Object.keys(gravity_values).find(planet => gravity_values[planet] === gravity);
+       
+        if (planetName && newHeight > maxHeight[planetName]) {
+            popup.style.display = 'block';
+            popupMsg.textContent = `For ${planetName.charAt(0).toLocaleUpperCase() + planetName.slice(1)}, you can't enter a height greater than ${maxHeight[planetName]} meters.`;
+            popup.classList.add("show");
+            return true;
+        };
+        return false;
+    };
+
+    const timestepRanges = {
+        sun: [
+            { maxHeight: 10, value: 0.00011 },
+            { maxHeight: 3000, value: 0.000152 },
+        ],
+        mercury: [
+            { maxHeight: 10, value: 0.000320 },
+            { maxHeight: 20, value: 0.000340 },
+        ],
+        venus: [
+            { maxHeight: 10, value: 0.000180 },
+            { maxHeight: 90, value: 0.000200 },
+        ],
+        earth: [
+            { maxHeight: 10, value: 0.000142 },
+            { maxHeight: 90, value: 0.000152 },
+        ],
+        moon: [
+            { maxHeight: 10, value: 0.000750 }
+        ],
+        mars: [
+            { maxHeight: 10, value: 0.000250 },
+            { maxHeight: 20, value: 0.000270 },
+        ],
+        jupiter: [
+            { maxHeight: 10, value: 0.000045 },
+            { maxHeight: 90, value: 0.000050 },
+        ],
+        saturn: [
+            { maxHeight: 10, value: 0.000060 },
+            { maxHeight: 90, value: 0.000065 },
+        ],
+        uranus: [
+            { maxHeight: 10, value: 0.000090 },
+            { maxHeight: 90, value: 0.000100 },
+        ],
+        neptune: [
+            { maxHeight: 10, value: 0.000080 },
+            { maxHeight: 90, value: 0.000090 },
+        ]
+    };     
+
+    // mars, neptune thik korte hoibo
+    // saturn 200m
+    
+    function getTimestepValue(planet, height) {
+        if (!timestepRanges[planet]) {
+            console.warn(`No timestep data for planet: ${planet}`);
+            return null;
+        };
+    
+        for (let i = 0; i < timestepRanges[planet].length; i++) {
+            if (height <= timestepRanges[planet][i].maxHeight) {
+                return timestepRanges[planet][i].value;
+            };
+        };
+    
+        return timestep_values[planet];
+    };    
+    
+    function getRadiusForPlanet(gravity, height) {
+        let planet = Object.keys(gravity_values).find(key => gravity_values[key] === gravity);
+    
+        if (!planet) {
+            console.warn(`Gravity value ${gravity} does not match any known planet.`);
+            return simulation_radius;
+        }
+        return height <= 10 ? 60 : height >= 30000 ? 40 : simulation_radius;
+    };    
+
+    function setParameters() {
+        let inputValue = input.value.trim().toLowerCase();
+        let planet = Object.keys(gravity_values).find(key => gravity_values[key] === gravity);
+
+        if (!inputValue) {
+            popup.style.display = 'block';
+            popupMsg.textContent = "Please enter a valid height, gravity, or fall time.";
+            popup.classList.add("show");
+            return;
+        };
+    
+        if (!isNaN(parseFloat(inputValue)) && parseFloat(inputValue) > 0) {
+            let newHeight = parseFloat(inputValue);
+
+            const validationResult = validateHeightForPlanet(newHeight);
+            if (validationResult) { return; };
+            timestepValue = getTimestepValue(planet, newHeight);
+            var_radius = getRadiusForPlanet(gravity, newHeight);
+
+            if (newHeight > maxCanvasHeight) {
+                newHeight = maxCanvasHeight;
+            };
+    
+            heightScale = canvasHeight / newHeight;
+            heightDisplay.innerHTML = `${inputValue} meters`;
+    
+            y = 0;
+            vy = 0;
+            heightSet = true;
+    
+            cancelAnimationFrame(animationId);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            let bgImage = new Image();
+            bgImage.src = currentBackgroundImage;
+            bgImage.onload = function () {
+                context.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            };
+    
+            context.beginPath();
+            context.arc(parseInt(canvas.width / 2), y, var_radius, 0, Math.PI * 2, false);
+            context.fillStyle = "red";
+            context.fill();
+            context.closePath();
+        } else if (inputValue in timestep_values) {
+            timestepValue = timestep_values[inputValue];
+            gravity = gravity_values[inputValue];
+            gravityDisplay.innerHTML = `${inputValue.charAt(0).toUpperCase() + inputValue.slice(1)} (${gravity_values[inputValue]} m/s²)`;
+            gravitySet = true;
+    
+            if (inputValue in planetImages) {
+                loadBackgroundImage(planetImages[inputValue]);
+            } else {
+                loadBackgroundImage(planetImages['default']);
+            };
+        } else {
+            popup.style.display = 'block';
+            popupMsg.textContent = "Please enter a valid height, gravity, or fall time.";
+            popup.classList.add("show");
+            return;
+        };
+    
+        input.value = '';
+    };
+       
+    function animate() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    
+        let bgImage = new Image();
+        bgImage.src = currentBackgroundImage;
+        context.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+    
+        context.beginPath();
+        context.moveTo(0, canvas.height - 7);
+        context.lineTo(canvas.width, canvas.height - 7);
+        context.stroke();
+    
+        let gravityMultiplier = 1.6;
+        vy += (gravity * heightScale * timestepValue * gravityMultiplier);
+        y += vy;
+    
+        if (y + var_radius >= canvas.height - 10) {
+            y = canvas.height - var_radius - 10;
+            cancelAnimationFrame(animationId);
+    
+            let actualTime = Date.now() - startTime;
+            actualTimeDisplay.innerHTML = `${(actualTime / 1000).toFixed(2)} seconds`;
+        } else {
+            animationId = requestAnimationFrame(animate);
+        };
+    
+        context.beginPath();
+        context.arc(parseInt(canvas.width / 2), y, var_radius, 0, Math.PI * 2, false);
+        context.fillStyle = "red";
+        context.fill();
+        context.closePath();
+    };
+    
+    function startSimulation() {
+        if (!heightSet || !gravitySet) {
+            popup.style.display = 'block';
+            popupMsg.textContent = "Please set both height and gravity before starting the simulation.";
+            popup.classList.add("show");
+            return;
+        };
+
+        startTime = Date.now();
+    
+        let predictedTime = Math.sqrt((2 * (canvasHeight / heightScale)) / gravity);
+        predictedTimeDisplay.innerHTML = `${predictedTime.toFixed(2)} seconds`;
+
+        animate();
+    };
+
+    document.addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            startSimulation();
+        } else if (event.key === "Enter") {
+            setParameters();
+            actualTimeDisplay.innerHTML = "-";
+        } else if (event.key === "/") {
+            event.preventDefault();
+            input.focus();
+            if (!input.value) {
+                input.value = "";
+            } else { input.value = input.value + "/" };
+        };
+    });
+
+    startBtn.addEventListener("click", startSimulation);
+
+    window.addEventListener("resize", () => {
+        canvasWidth = window.innerWidth * 0.8;
+        canvasHeight = window.innerHeight * 0.8;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        let bgImage = new Image();
+        bgImage.src = currentBackgroundImage;
+        bgImage.onload = function () {
+            context.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+        };
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            popup.style.display = 'none';
+            popup.classList.remove("show");
+        };
+    });
+</script>
+</html>

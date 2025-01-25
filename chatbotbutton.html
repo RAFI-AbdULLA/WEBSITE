@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hello</title>
+</head>
+<body>
+    <div class="button-container">
+        <a href="/withoutAPIchatbot.html" id="withoutAPI">Without API Chat Bot</a>
+        <a href="/withAPIchatbot.html" id="withAPI">With API Chat Bot</a>
+        <a href="/text2img.html" id="text2img">Text to Image Generator</a>
+    </div>
+</body>
+<script src="/f3.js"></script>
+<style>
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Body Styling */
+    body {
+        background: linear-gradient(135deg, #2E3192, #1BFFFF);
+        color: #ffffff;
+        font-family: 'Josefin Sans', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+    /* Button Container */
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Styled Buttons */
+    .button-container a {
+        text-decoration: none;
+        color: #2E3192;
+        background-color: #FFD700;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    .button-container a:hover {
+        background-color: #FFB400;
+        transform: translateY(-5px);
+    }
+
+    /* Button IDs for Styling */
+    #withoutAPI, #withAPI, #text2img {
+        color: #2E3192;
+    }
+</style>
+</html>

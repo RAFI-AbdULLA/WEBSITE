@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary</title>
+</head>
+<body>
+    
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <img src="/assets/logo.svg" alt="">
+                </div>
+                <div class="content">
+                    <select>
+                        <option value="sans-serif">Sans Serif</option>
+                        <option value="serif">Serif</option>
+                        <option value="monospace">Mono Space</option>
+                    </select>
+
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    <img src="/assets/icon-moon.svg" alt="">
+                </div>
+            </nav>
+
+            <form>
+                <input type="text" placeholder="Search the Word">
+                <img src="/assets/icon-search.svg" class="search">
+            </form>
+
+        </div>
+    </header>
+
+    <section class="article">
+        <div class="container">
+            <div class="dictionary_content">
+                <div class="section">
+                    <h2>Keyboard</h2>
+                    <p>/'ki:bɔ:d/</p>
+                </div>
+                <img src="/assets/icon-play.svg" alt="">
+            </div>
+
+            <div class="noun">
+                <h3 class="partsOfSpeechNoun">Noun</h3>
+                <p>Meaning</p>
+                <ul class="meanings">
+                    <li>(etc.) A set of keys used to operate a typewriter, computer etc.</li>
+                    <li>A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.</li>
+                    <li>A device with keys of a musical keyboard, used to control electronic sound-producing devices which may be built into or separate from the keyboard device.</li>
+                </ul>
+                <div class="synonyms">
+                    <p>Synonyms <span class="syn">electronic keyboard</span></p>
+                </div>
+            </div>
+
+            <div class="verb">
+                <div class="verbContent">
+                    <h3>Verb</h3>
+                    <p>Meaning</p>
+                    <ul class="meanings">
+                        <li>To type on a computer keyboard</li>
+                        <li>"Keyboarding is the part of this job I hate the most."</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<style>
+    :root {
+        --darkBlack: #050505;
+        --BlackGray: #1f1f1f;
+        --DarkGray: #2d2d2d;
+        --LightGray: #3a3a3a;
+        --Gray: #757575;
+        --halfWhite: #e9e9e9;
+        --whiteGray: #f4f4f4;
+        --white: #ffffff;
+        --purpule: #a445ed;
+        --orange: #ff5252;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: sans-serif;
+        background-color: var(--white);
+        color: var(--darkBlack);
+    }
+
+    body.dark {
+        background-color: var(--darkBlack);
+        color: var(--white);
+        transition: 0.3s ease-in-out;
+    }
+
+    .container {
+        max-width: 1080px;
+        width: 100%;
+        overflow: hidden;
+        padding: 0 2rem;
+        margin: 0 auto;
+    }
+
+    header {
+        padding: 1.2rem 0;
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+    }
+
+    .content select {
+        border: none;
+        margin-right: 2rem;
+        background-color: var(--white);
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 25px;
+        margin-right: 1rem;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--Gray);
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+    }
+
+    .slider::before {
+        position: absolute;
+        content: '';
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 3px;
+        background-color: var(--white);
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+    }
+
+    input:checked + .slider {
+        background-color: var(--purpule);
+    }
+
+    input:focus + .slider {
+        box-shadow:  0 0 1px var(--purpule);
+    }
+
+    input:checked + .slider::before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    header form {
+        margin: 2rem 0;
+        position: relative;
+    }
+
+    header form input {
+        width: 100%;
+        background-color: var(--halfWhite);
+        padding: 1rem 1rem;
+        outline: none;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.3rem;
+        font-family: inherit;
+    }
+
+    header form input:focus {
+        border: 1px solid var(--purpule);
+    }
+
+    header form img {
+        object-fit: cover;
+        top: 50%;
+        left: 96%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .dictionary_content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .section p {
+        color: var(--purpule);
+    }
+
+    .dictionary_content img {
+        cursor: pointer;
+    }
+
+    .dictionary_content img:hover {
+        opacity: 0.7;
+        transition: 0.3s ease-in-out;
+    }
+
+    .noun, .verb {
+        margin: 2rem 0;
+    }
+
+    .noun h3, .verb h3 {
+        font-size: 1.5rem;
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .noun h3::after, .verb h3::after {
+        position: absolute;
+        content: '';
+        width: 92%;
+        height: 2px;
+        background-color: var(--halfWhite);
+        top: 15px;
+        bottom: 0;
+        right: 0;
+    }
+
+    .noun > p, .verb > p {
+        color: var(--Gray);
+    }
+
+    .noun ul, .verb ul {
+        margin: 2rem 0;
+    }
+
+    ul li:nth-child(1) {
+        list-style-type: none;
+        margin: -0.5rem 0;
+        display: flex;
+        align-items: center;
+        margin-left: 2rem;
+    }
+
+    ul li {
+        list-style-type: none;
+        margin: 1rem 0;
+        display: flex;
+        align-items: center;
+        margin-left: 2rem;
+    }
+
+    ul li::before {
+        content: '\2022';
+        color: var(--purpule);
+        font-size: 2rem;
+        width: 1rem;
+        padding-right: 2rem;
+    }
+
+    .synonyms p span {
+        color: var(--purpule);
+        font-weight: 600;
+        margin-left: 2rem;
+    }
+</style>
+<script src="/f3.js"></script>
+<script>
+    const bodyEl = document.querySelector('body');
+    const checkBox = document.querySelector(".switch input");
+    const selectOptions = document.querySelector('.content select');
+    const searchBtn = document.querySelector(".search");
+    const inputEl = document.querySelector("form input");
+    const dictContainer = document.querySelector(".dictionary_content");
+    const partsofSpeech = document.querySelector(".partsOfSpeechNoun");
+    const ulEl = document.querySelector(".meanings");
+    const SynEl = document.querySelector(".syn");
+    const verbEl = document.querySelector(".verb");
+    const form = document.querySelector("form");
+
+    const API_URL = `https://api.dictionaryapi.dev/api/v2/entries/en/`;
+
+    searchBtn.addEventListener("click", () => {
+        if (inputEl.value !== '') {
+            searching(inputEl.value);
+            inputEl.style.border = "";
+            inputEl.value = "";
+        } else {
+            inputEl.style.border = '1px solid red';
+        }
+    });
+
+    async function searching(data) {
+        try {
+            const api_data = await fetch(API_URL + data);
+            const result = await api_data.json();
+
+            console.log(result);
+
+            const html = `<div class="section">
+                            <h2>${result[0].word}</h2>
+                            <p>${result[0].phonetic}</p>
+                        </div>
+                        <img class="play" src="/assets/icon-play.svg" alt="">`;
+
+            dictContainer.innerHTML = html;
+            partsofSpeech.textContent = result[0].meanings[0].partOfSpeech;
+
+            const definitions = result[0].meanings[0].definitions.map(def => `<li>${def.definition}</li>`).join('');
+            ulEl.innerHTML = definitions;
+
+            const synonyms = result[0].meanings[0].synonyms;
+            SynEl.textContent = synonyms.join(', ');
+
+            if (result[0].meanings.length > 1) {
+                let partOfSpeech2 = `<div class="verbContent">
+                                        <h3>${result[0].meanings[1].partOfSpeech}</h3>
+                                        <p>Meaning</p>
+                                        <ul class="meanings">
+                                            <li>${result[0].meanings[1].definitions[0].definition}</li>
+                                        </ul>
+                                    </div>`;
+
+                verbEl.innerHTML = partOfSpeech2;
+
+            } else {
+                verbEl.innerHTML = "";
+            }
+
+            const playBtn = document.querySelector(".play")
+
+            playBtn.addEventListener("click", () => {
+                const speechWord = result[0].word
+                speakText(speechWord)
+            })
+
+        } catch (error) {
+            alert('Error fetching data: ' + error.message);
+        }
+    }
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        searching(inputEl.value);
+        inputEl.value = "";
+    });
+
+    selectOptions.addEventListener("change", (e) => {
+        let fonts = e.target.value;
+        bodyEl.style.fontFamily = fonts;
+    });
+
+    checkBox.addEventListener("click", () => {
+        bodyEl.classList.toggle('dark');
+    });
+
+    function speakText(text) {
+        let speechText = new SpeechSynthesisUtterance();
+        speechText.text = text;
+        speechText.voice = window.speechSynthesis.getVoices()[0];
+        window.speechSynthesis.speak(speechText);
+    }
+
+</script>
+</html>
