@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>Info</title>
+		<script src="main.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+		<style>
+			body {
+				background-color: #152850;
+			}
+			header{
+				text-align: center;
+				margin-top: -40px;
+				color: white;
+			}
+			article{
+				text-align: center;
+				margin-top: -15px;
+				color: white;
+			}
+
+			.btn {
+				background-color: #4CAF50;
+				color: white;
+				padding: 16px 20px;
+				border: none;
+				cursor: pointer;
+				width: 50%;
+				margin-bottom: 10px;
+				opacity: 0.8;
+				margin-top: -200px;
+			}
+		</style>
+	</head>
+	<body>
+		<br>
+		<header>
+			<h1>Planetary System Creator</h1>
+		</header>
+		<article>
+			<p1>Simulation of gravitational interactions between objects by using the law of universal gravitation.</p1>
+			<p2>The simulation is presented graphically using a canvas element refreshed at a specified frequency(milliseconds), the refresh rate can be changed in the options.</p2>
+			<p3>In order to create a new system, select <b>"Create new system"</b> <br> after selecting it the system creation window will be displayed, adding objects and displaying their information is done using the various buttons from the navigation menus.<br></p3>
+			<img src='/info_images/creator.png' alt='sample' height='300px' width='auto'>
+			<br>
+			<p4>All menus use the "getElementByID" and "innerHTML" functions, each button uses the on..() function and operations on style properties, each button also uses the "audio" element, hover sounds and button press sounds, in case of no sound, i.e. the buttons do not play audio elements, you need to uncheck the "Block audio auto play" option in your browser.
+				The creation of an object is done after selecting and filling in its data and selecting the
+				"Place" button.</p4>
+			<br>
+			<p5>The creation of an object is done after selecting and filling in its data and clicking the <br><b>"Place"</b></p5>
+			<br>
+			<img src='/info_images/addingPlanet.png' alt='sample' height='300px' width='auto'>
+			<br>
+			<p6>Jesli twoIf the object being created is a star, it will be added automatically at the selected location on the canvas, otherwise, after selecting the initial location of the object, the selection of the direction and initial speed will start, displaying the predicted flight path of the object, another press of the mouse button confirms the flight of the object<br>The object's flight path is predicted in a separate thread using the "Web Workers" technology.</p6>
+			<br>
+			<img src='/info_images/utworzone.png' alt='sample' height='300px' width='auto'>
+			<br>
+			<p7>Detailed information about each object and options for removing the object can be double-displayed by clicking on the object on the canvas or selecting it from the right menu displaying all created objects.</p7>
+			<br>
+			<img src='/info_images/objectInfo.png' alt='sample' height='300px' width='auto'>
+			<br>
+			<p8>Information about the selected object is displayed live in text form when you hover the mouse over the object.</p8>
+			<br>
+			<img src='/info_images/liveInfo.jpg' alt='sample' height='300px' width='auto'>
+			<br>
+			<p9>In the event of a collision, the object with the smaller mass is destroyed.</p9>
+			<br>
+			<img src='/info_images/collision.jpg' alt='sample' height='300px' width='auto'>
+			<br>
+			<p10>As the mass of an object increases, its radius increases, and in the case of stars, their colors change based on the spectral classes of the stars.</p10>
+			<br>
+			<img src='/info_images/starTypes.jpg' alt='sample' height='300px' width='auto'>
+			<br>
+			<p11>When creating a planet, you can choose one of 7 types, including the ring type</p11>
+			<p12>Opening and closing the menu is done using the "style.display" style property.<br>Pages validate correctly on the W3C website according to the HTML5 and CSS standards in the Firefox 71.0 (64 bit) browser.</p12>
+
+		</article>
+		<br>	
+		<br>	
+		<div class="settings" style="text-align: center;">
+	    	<a type="button" href="slignshot.html" class="btn" style="text-decoration: none; width: 100px; height: 30px; bottom:0;">Go Back</a>
+		</div>
+	</body>
+</html>
